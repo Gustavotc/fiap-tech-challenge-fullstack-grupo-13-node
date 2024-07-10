@@ -4,8 +4,8 @@ import { AppService } from './services/app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
-import { User } from './user/user.entity';
-import { Role } from './user/role.entity';
+import { User } from './user/schemas/user.schema';
+import { Role } from './user/schemas/role.schema';
 
 @Module({
   imports: [
@@ -20,8 +20,9 @@ import { Role } from './user/role.entity';
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
       entities: [User, Role],
-      synchronize: true,
+      synchronize: false,
       ssl: true,
+      logging: process.env.ENV === 'development',
     }),
     UserModule,
   ],
