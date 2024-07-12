@@ -11,3 +11,5 @@ export const updateUserSchema = z
   .required();
 
 export type UpdateUserDto = z.infer<typeof updateUserSchema>;
+
+export const userUuidSchema = z.string().uuid();

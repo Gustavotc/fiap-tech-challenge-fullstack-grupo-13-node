@@ -37,8 +37,8 @@ export class UserTypeormRepository implements UserRepository {
     await this.usersRepository.delete({ id });
   }
 
-  async update(userDTO: User): Promise<IUpdateUserResponse> {
-    const { id, name, email, role } = await this.usersRepository.save(userDTO);
+  async update(user: User): Promise<IUpdateUserResponse> {
+    const { id, name, email, role } = await this.usersRepository.save(user);
     return { id, name, email, role };
   }
 }

@@ -12,7 +12,11 @@ import {
 import { CreateUserDto, createUserSchema } from './dto/create-user.dto';
 import { UserService } from './user.service';
 import { ZodValidationPipe } from 'src/shared/pipe/zod-validation-pipe';
-import { UpdateUserDto } from './dto/update-user.dto';
+import {
+  UpdateUserDto,
+  updateUserSchema,
+  userUuidSchema,
+} from './dto/update-user.dto';
 import { z } from 'zod';
 
 const findAllUsersSchema = z.object({
@@ -42,13 +46,16 @@ export class UserController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', new ZodValidationPipe(userUuidSchema)) id: string) {
     return this.userService.findOne(id);
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(id, updateUserDto);
+  update(
+    @Param('id', new ZodValidationPipe(userUuidSchema)) id: string,
+    @Body(new ZodValidationPipe(updateUserSchema)) updateUserDto: UpdateUserDto,
+  ) {
+    this.userService.update(id, updateUserDto);
   }
 
   @Delete(':id')

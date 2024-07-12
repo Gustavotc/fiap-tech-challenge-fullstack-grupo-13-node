@@ -1,11 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateUserDto, UserRole } from './dto/create-user.dto';
+import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './schemas/user.schema';
 import {
   IFindAllParams,
   UserRepository,
 } from './repository/user.repository.interface';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { EUserRole } from './schemas/models/user.interface';
 
 @Injectable()
 export class UserService {
@@ -18,7 +19,7 @@ export class UserService {
     user.email = createUserDto.email;
     user.password = createUserDto.password;
     user.role = {
-      id: UserRole[createUserDto.role_id],
+      id: EUserRole[createUserDto.role_id],
       type: createUserDto.role_id,
     };
 
@@ -49,7 +50,7 @@ export class UserService {
     updatedUser.email = email;
     updatedUser.password = password;
     updatedUser.role = {
-      id: UserRole[role_id],
+      id: EUserRole[role_id],
       type: role_id,
     };
 

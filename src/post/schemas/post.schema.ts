@@ -22,10 +22,10 @@ export class Post implements IPost {
   @Column()
   category: string;
 
-  @Column()
+  @Column({ name: 'created_at' })
   createAt: Date;
 
-  @Column()
+  @Column({ name: 'updated_at' })
   updateAt: Date;
 
   @ManyToOne(() => User)
