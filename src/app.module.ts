@@ -8,6 +8,7 @@ import { PostModule } from './post/post.module';
 import { User } from './user/schemas/user.schema';
 import { Role } from './user/schemas/role.schema';
 import { Post } from './post/schemas/post.schema';
+import { env } from 'src/shared/env/dotenv';
 
 @Module({
   imports: [
@@ -16,15 +17,15 @@ import { Post } from './post/schemas/post.schema';
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env.DATABASE_HOST,
-      port: parseInt(process.env.DATABASE_PORT),
-      username: process.env.DATABASE_USER,
-      password: process.env.DATABASE_PASSWORD,
-      database: process.env.DATABASE_NAME,
+      host: env.DATABASE_HOST,
+      port: env.DATABASE_PORT,
+      username: env.DATABASE_USER,
+      password: env.DATABASE_PASSWORD,
+      database: env.DATABASE_NAME,
       entities: [User, Role, Post],
       synchronize: false,
       ssl: true,
-      logging: process.env.ENV === 'development',
+      logging: env.NODE_ENV === 'development',
     }),
     UserModule,
     PostModule,
