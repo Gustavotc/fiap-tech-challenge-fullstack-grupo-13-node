@@ -17,34 +17,33 @@ import {
   updateUserSchema,
   userUuidSchema,
 } from './dto/update-user.dto';
-import { z } from 'zod';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { User } from './schemas/user.schema';
+import {
+  IPaginationParams,
+  paginationSchema,
+} from 'src/shared/types/pagination.types';
 
-const findAllUsersSchema = z.object({
-  page: z.coerce.number().default(1),
-  limit: z.coerce.number().default(10),
-});
-
+@ApiTags('user')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
   @UsePipes(new ZodValidationPipe(createUserSchema))
-  async create(@Body() createUserDto: CreateUserDto) {
+  async create(@Body() createUserDto: CreateUserDto): Promise<User> {
     return this.userService.create(createUserDto);
   }
 
   @Get()
   async findAll(
-    @Query(new ZodValidationPipe(findAllUsersSchema))
-    query: {
-      page: number;
-      limit: number;
-    },
+    @Query(new ZodValidationPipe(paginationSchema))
+    query: IPaginationParams,
   ) {
     return this.userService.findAll(query);
   }
 
+  @ApiResponse({ status: 404, description: 'User not found' })
   @Get(':id')
   findOne(@Param('id', new ZodValidationPipe(userUuidSchema)) id: string) {
     return this.userService.findOne(id);

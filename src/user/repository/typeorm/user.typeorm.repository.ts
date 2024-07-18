@@ -30,7 +30,17 @@ export class UserTypeormRepository implements UserRepository {
   }
 
   async findById(id: string): Promise<User | null> {
-    return this.usersRepository.findOneBy({ id });
+    return this.usersRepository.findOne({
+      where: { id },
+      relations: {
+        role: true,
+      },
+      select: {
+        role: {
+          type: true,
+        },
+      },
+    });
   }
 
   async delete(id: string): Promise<void> {

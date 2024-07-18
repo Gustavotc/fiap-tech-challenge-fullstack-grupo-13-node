@@ -1,14 +1,16 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { PostRepository } from './repository/post.repository.interface';
 import { CreatePostDto } from './dto/create-post.dto';
 import { Post } from './schemas/post.schema';
 import { UserRepository } from 'src/user/repository/user.repository.interface';
-// import { User } from './schemas/user.schema';
-// import {
-//   IFindAllParams,
-//   UserRepository,
-// } from './repository/user.repository.interface';
-// import { UpdateUserDto } from './dto/update-user.dto';
+import { IPaginationParams } from 'src/shared/types/pagination.types';
+import { DeletePostDto } from './dto/delete-post.dto';
+import { UpdatePostDto } from './dto/update-post.dto';
+import { FindTeacherPostsDto } from './dto/find-teacher-posts.dto';
 
 @Injectable()
 export class PostService {
@@ -22,7 +24,8 @@ export class PostService {
 
     const user = await this.userRepository.findById(createPostDto.user_id);
 
-    if (!user) throw new NotFoundException('User not found');
+    if (!user || user.role.type !== 'DOCENTE')
+      throw new UnauthorizedException('User unauthorized');
 
     post.title = createPostDto.title;
     post.description = createPostDto.description;
@@ -32,42 +35,72 @@ export class PostService {
     return this.postRepository.create(post);
   }
 
-  // async findAll(params: IFindAllParams) {
-  //   return this.userRepository.findAll(params);
-  // }
+  async findAll(params: IPaginationParams) {
+    return this.postRepository.findAll(params);
+  }
 
-  // async findOne(id: string) {
-  //   const user = await this.userRepository.findById(id);
+  async findOne(id: string) {
+    const post = await this.postRepository.findById(id);
 
-  //   if (!user) throw new NotFoundException('User not found');
+    if (!post) throw new NotFoundException('Post not found');
 
-  //   return user;
-  // }
+    return post;
+  }
 
-  // async update(id: string, updateUserDto: UpdateUserDto) {
-  //   const user = await this.userRepository.findById(id);
+  async update(updatePostDto: UpdatePostDto) {
+    const user = await this.userRepository.findById(updatePostDto.user_id);
 
-  //   if (!user) throw new NotFoundException('User not found');
+    if (!user || user.role.type !== 'DOCENTE') {
+      throw new UnauthorizedException('User unauthorized');
+    }
 
-  //   const { name, email, password, role_id } = updateUserDto;
+    const post = await this.postRepository.findById(updatePostDto.post_id);
 
-  //   const updatedUser = user;
-  //   updatedUser.name = name;
-  //   updatedUser.email = email;
-  //   updatedUser.password = password;
-  //   updatedUser.role = {
-  //     id: UserRole[role_id],
-  //     type: role_id,
-  //   };
+    if (!post) throw new NotFoundException('Post not found');
 
-  //   return this.userRepository.update(user);
-  // }
+    if (post.user.id !== updatePostDto.user_id) {
+      throw new UnauthorizedException('User unauthorized');
+    }
 
-  // async delete(id: string) {
-  //   const user = await this.userRepository.findById(id);
+    const updatedPost = post;
+    updatedPost.title = updatePostDto.title;
+    updatedPost.description = updatePostDto.description;
+    updatedPost.category = updatePostDto.category;
 
-  //   if (!user) throw new NotFoundException('User not found');
+    return this.postRepository.update(updatedPost);
+  }
 
-  //   return this.userRepository.delete(id);
-  // }
+  async delete({ post_id, user_id }: DeletePostDto) {
+    const user = await this.userRepository.findById(user_id);
+
+    if (!user || user.role.type !== 'DOCENTE') {
+      throw new UnauthorizedException('User unauthorized');
+    }
+
+    const post = await this.postRepository.findById(post_id);
+
+    if (!post) throw new NotFoundException('Post not found');
+
+    if (post.user.id !== user_id) {
+      throw new UnauthorizedException('User unauthorized');
+    }
+
+    return this.postRepository.delete(post_id);
+  }
+
+  async findTeacherPosts(findTeacherPostsDto: FindTeacherPostsDto) {
+    const { teacher_id, limit, page } = findTeacherPostsDto;
+
+    const user = await this.userRepository.findById(teacher_id);
+
+    if (!user || user.role.type !== 'DOCENTE') {
+      throw new UnauthorizedException('User unauthorized');
+    }
+
+    return this.postRepository.findTeacherPosts({ limit, page, teacher_id });
+  }
+
+  async findByText(text: string) {
+    return this.postRepository.findByText(text);
+  }
 }
