@@ -1,16 +1,11 @@
 import { Test } from '@nestjs/testing';
-import { UserController } from './user.controller';
-import { UserService } from './user.service';
-import { UserRepository } from './repository/user.repository.interface';
-import { User } from './schemas/user.schema';
+import { UserRepository } from 'src/user/repository/user.repository.interface';
+import { User } from 'src/user/schemas/user.schema';
+import { UserController } from 'src/user/user.controller';
+import { UserService } from 'src/user/user.service';
+import { createUserMock } from '../mocks/user.mock';
 
-const mockUserRepository = {
-  create: jest.fn(),
-  findAll: jest.fn(),
-  findById: jest.fn(),
-  delete: jest.fn(),
-  update: jest.fn(),
-};
+const mockUserRepository = {};
 
 describe('UserController', () => {
   let userController: UserController;
@@ -25,10 +20,6 @@ describe('UserController', () => {
           provide: UserRepository,
           useValue: mockUserRepository,
         },
-        // {
-        //   provide: getRepositoryToken(User),
-        //   useValue: mockUserRepository,
-        // },
       ],
     }).compile();
 
@@ -40,18 +31,7 @@ describe('UserController', () => {
 
   describe('findAll', () => {
     it('should return an array of users', async () => {
-      const result: User[] = [
-        {
-          id: 'id',
-          email: 'email',
-          name: 'name',
-          password: 'password',
-          role: {
-            id: 'id',
-            type: 'DOCENTE',
-          },
-        },
-      ];
+      const result: User[] = Array.from({ length: 3 }, createUserMock);
 
       jest.spyOn(userService, 'findAll').mockResolvedValueOnce(result);
 
