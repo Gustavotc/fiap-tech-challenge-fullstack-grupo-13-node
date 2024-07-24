@@ -24,7 +24,6 @@ import { env } from 'src/shared/env/dotenv';
       database: env.DATABASE_NAME,
       entities: [User, Role, Post],
       synchronize: false,
-      ssl: true,
       logging: env.NODE_ENV === 'development',
     }),
     UserModule,
@@ -33,4 +32,4 @@ import { env } from 'src/shared/env/dotenv';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

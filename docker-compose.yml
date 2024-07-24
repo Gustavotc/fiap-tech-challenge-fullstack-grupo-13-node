@@ -1,6 +1,17 @@
 version: '3.5'
 
 services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+    container_name: postgres
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+
   app:
     build:
       context: .
@@ -10,6 +21,8 @@ services:
       - PORT=${PORT}
     ports:
       - '3000:3000'
+    depends_on:
+      - db
     volumes:
       - ./src:/app/src
 
@@ -22,3 +35,6 @@ services:
       - PGADMIN_DEFAULT_PASSWORD=${PG_ADMIN_PASSWORD}
     ports:
       - '5050:80'
+
+    depends_on:
+      - db
