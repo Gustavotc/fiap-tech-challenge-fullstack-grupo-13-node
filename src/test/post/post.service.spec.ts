@@ -9,6 +9,8 @@ import { FindTeacherPostsDto } from 'src/post/dto/find-teacher-posts.dto';
 import { createPostMock } from '../mocks/post.mock';
 import { NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { createUserMock } from '../mocks/user.mock';
+import { createPostDtoMock } from '../mocks/createPostDtoMock';
+import { Post } from 'src/post/schemas/post.schema';
 
 const mockPostRepository = {
   create: jest.fn(),
@@ -49,26 +51,35 @@ describe('PostService', () => {
 
   describe('create', () => {
     it('should create and return a post', async () => {
-      const createPostDto: CreatePostDto = {
-        title: 'New Post',
-        description: 'Post Description',
-        category: 'General',
-        user_id: 'user1',
-      };
+      const createPostDto = createPostDtoMock();
 
       const user = createUserMock();
-      user.role.type = 'DOCENTE'; // Definindo o usuário como autorizado
-
-      const post = createPostMock();
-      post.user = user;
+      user.role.type = 'DOCENTE';
 
       jest.spyOn(mockUserRepository, 'findById').mockResolvedValueOnce(user);
-      jest.spyOn(mockPostRepository, 'create').mockResolvedValueOnce(post);
+
+      const newPost = new Post();
+      newPost.title = createPostDto.title;
+      newPost.description = createPostDto.description;
+      newPost.category = createPostDto.category;
+      newPost.user = user;
+
+      const insertedPost: Post = {
+        ...newPost,
+        id: 'id',
+        createAt: new Date(),
+        updateAt: new Date(),
+      };
+
+      jest
+        .spyOn(mockPostRepository, 'create')
+        .mockResolvedValueOnce(insertedPost);
 
       const result = await postService.create(createPostDto);
 
-      expect(result).toEqual(post);
+      expect(result).toEqual(insertedPost);
       expect(mockUserRepository.findById).toHaveBeenCalledTimes(1);
+      expect(mockPostRepository.create).toHaveBeenCalledWith(newPost);
     });
 
     it('should throw UnauthorizedException if user is not DOCENTE', async () => {

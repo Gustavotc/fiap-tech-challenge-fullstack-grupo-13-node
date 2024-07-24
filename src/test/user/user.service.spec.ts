@@ -53,17 +53,15 @@ describe('UserService', () => {
       const result = await userService.create(createUserDto);
 
       expect(result).toEqual(user);
-      expect(mockUserRepository.create).toHaveBeenCalledWith(
-        expect.objectContaining({
-          name: createUserDto.name,
-          email: createUserDto.email,
-          password: createUserDto.password,
-          role: expect.objectContaining({
-            id: user.role.id,
-            type: createUserDto.role_id,
-          }),
-        }),
-      );
+      expect(mockUserRepository.create).toHaveBeenCalledWith({
+        name: createUserDto.name,
+        email: createUserDto.email,
+        password: createUserDto.password,
+        role: {
+          id: user.role.id,
+          type: createUserDto.role_id,
+        },
+      });
     });
   });
 
