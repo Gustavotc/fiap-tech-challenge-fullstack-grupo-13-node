@@ -13,18 +13,12 @@ services:
       - '5432:5432'
 
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: nest-docker-postgres
-    environment:
-      - PORT=${PORT}
+    image: grupo13/portal-alunos-api
+    container_name: portal-alunos-api
     ports:
       - '3000:3000'
     depends_on:
       - db
-    volumes:
-      - ./src:/app/src
 
   pgadmin:
     image: dpage/pgadmin4
@@ -35,6 +29,5 @@ services:
       - PGADMIN_DEFAULT_PASSWORD=${PG_ADMIN_PASSWORD}
     ports:
       - '5050:80'
-
     depends_on:
       - db
