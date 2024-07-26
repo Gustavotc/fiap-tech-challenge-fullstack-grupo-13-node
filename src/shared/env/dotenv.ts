@@ -12,7 +12,7 @@ const envSchema = z.object({
   DATABASE_PASSWORD: z.string(),
   DATABASE_PORT: z.coerce.number(),
   PG_ADMIN_USER: z.coerce.string(),
-  PG_ADMIN_PASSWORD: z.coerce.string()
+  PG_ADMIN_PASSWORD: z.coerce.string(),
 });
 
 const _env = envSchema.safeParse(process.env);
