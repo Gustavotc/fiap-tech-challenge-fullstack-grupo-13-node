@@ -5,6 +5,7 @@ import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { UpdateUserDto } from 'src/user/dto/update-user.dto';
 import { createUserMock } from '../mocks/user.mock';
 import { NotFoundException } from '@nestjs/common';
+import { EUserRole } from 'src/user/schemas/models/user.interface';
 
 const mockUserRepository = {
   create: jest.fn(),
@@ -46,6 +47,7 @@ describe('UserService', () => {
       user.name = createUserDto.name;
       user.email = createUserDto.email;
       user.password = createUserDto.password;
+      user.role.id = EUserRole[createUserDto.role_id];
       user.role.type = createUserDto.role_id;
 
       jest.spyOn(mockUserRepository, 'create').mockResolvedValueOnce(user);
