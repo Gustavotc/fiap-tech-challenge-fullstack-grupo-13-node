@@ -15,6 +15,7 @@ services:
   app:
     image: grupo13/portal-alunos-api
     container_name: portal-alunos-api
+    restart: always
     ports:
       - '3000:3000'
     depends_on:
