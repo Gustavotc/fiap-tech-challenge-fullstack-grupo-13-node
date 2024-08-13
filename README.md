@@ -1,73 +1,117 @@
+<h1 align="center">
+  👨‍🎓 Portal Alunos API 📚
+</h1>
+
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
+  <img alt="License" src="https://img.shields.io/static/v1?label=license&message=MIT&color=79A6F5&labelColor=0A1033">
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## 💻 Project
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+API for a students portal where teachers can create posts, visualize it own posts, update and delete them and students can visualize all posts created by teachers, similar to a blog.
 
-## Description
+## :hammer_and_wrench: Features
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- [ ] REST API;
+- [ ] Database persistance (PostgreSQL + TypeORM);
+- [ ] User CRUD;
+- [ ] Post CRUD;
+- [ ] Schema validation with Zod;
+- [ ] Docker image;
+- [ ] Paginated list requests;
+- [ ] Permissions based on user role;
+- [ ] CI/CD;
+- [ ] Unit tests;
 
-## Installation
+## ✨ Technologies
 
-```bash
+- [ ] NestJs
+- [ ] Typescript
+- [ ] PostgreSQL
+- [ ] TypeORM
+- [ ] Zod
+- [ ] CI/CD using Github Actions and DockerHub
+- [ ] Docker
+- [ ] Jest (unit tests)
+- [ ] Faker (mocks)
+- [ ] Swagger
+- [ ] ESLint + Prettier
+
+## 👨‍💻 Getting started
+
+```cl
+# Clone the project
+$ git clone https://github.com/Gustavotc/fiap-tech-challenge-fullstack-grupo-13-node.git
+```
+
+##### Env setup
+
+Create a `.env` file in the project root folder, folowing the `.env.example` template.
+
+##### Project setup
+
+```cl
+# Install the project dependencies
 $ npm install
 ```
 
-## Running the app
-
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+```cl
+# Run docker compose
+$ docker compose up
 ```
 
-## Test
+##### Database setup
 
-```bash
+Access PGAdmin through `localhost:5050` and log in using `PG_ADMIN_USER` and `PG_ADMIN_PASSWORD` env variables.
+
+Right click on “servers”, click on “register” and “server”.
+In “general” tab, inform “name” as `DATABASE_NAME` env variable.
+In “connection” tab, fill the “host name” with `DATABASE_HOST`, “port” with `DATABASE_PORT`, “username” with `DATABASE_USER` e “password” with `DATABASE_PASSWORD` env variables.
+
+With the new connection stablished, create a new database runing the following SQL comands:
+
+```SQL
+# create the new database
+CREATE DATABASE portal_alunos;
+
+# create extesion to generate UUID
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+# create posts table
+CREATE TABLE public.posts (
+    id uuid DEFAULT public.uuid_generate_v4() NOT NULL,
+    title character varying(255) NOT NULL,
+    description text,
+    category character varying(255),
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    user_id uuid
+);
+
+# create user roles table
+CREATE TABLE public.roles (
+    type character varying NOT NULL,
+    id uuid DEFAULT public.uuid_generate_v4() NOT NULL
+);
+
+# create users table
+CREATE TABLE public.users (
+    id uuid DEFAULT public.uuid_generate_v4() NOT NULL,
+    name character varying NOT NULL,
+    email character varying NOT NULL,
+    password character varying NOT NULL,
+    role_id uuid
+);
+```
+
+## ✅ Test
+
+```cl
 # unit tests
 $ npm run test
-
-# e2e tests
-$ npm run test:e2e
 
 # test coverage
 $ npm run test:cov
 ```
 
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+<br />
