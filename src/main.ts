@@ -5,6 +5,12 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.enableCors({
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: 'Authorization, Content-Type',
+  });
+
   const config = new DocumentBuilder()
     .setTitle('Portal alunos')
     .setDescription('API para portal de alunos e docentes')

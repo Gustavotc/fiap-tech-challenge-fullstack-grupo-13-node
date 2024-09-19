@@ -12,14 +12,27 @@ services:
     ports:
       - '5432:5432'
 
+  # app:
+  #   image: grupo13/portal-alunos-api
+  #   container_name: portal-alunos-api
+  #   restart: always
+  #   ports:
+  #     - '3000:3000'
+  #   depends_on:
+  #     - db
   app:
-    image: grupo13/portal-alunos-api
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: portal-alunos-api
-    restart: always
+    environment:
+      - PORT=${PORT}
     ports:
       - '3000:3000'
     depends_on:
       - db
+    volumes:
+      - ./src:/app/src
 
   pgadmin:
     image: dpage/pgadmin4
