@@ -25,10 +25,14 @@ export class PostTypeormRepository implements PostRepository {
       select: {
         user: {
           id: true,
+          name: true,
         },
       },
       skip: (page - 1) * limit,
       take: limit,
+      order: {
+        createAt: 'DESC',
+      },
     });
   }
 
@@ -45,10 +49,14 @@ export class PostTypeormRepository implements PostRepository {
       select: {
         user: {
           id: true,
+          name: true,
         },
       },
       skip: (page - 1) * limit,
       take: limit,
+      order: {
+        createAt: 'DESC',
+      },
     });
   }
 
@@ -63,6 +71,7 @@ export class PostTypeormRepository implements PostRepository {
       select: {
         user: {
           id: true,
+          name: true,
         },
       },
     });
@@ -82,7 +91,11 @@ export class PostTypeormRepository implements PostRepository {
       select: {
         user: {
           id: true,
+          name: true,
         },
+      },
+      order: {
+        createAt: 'DESC',
       },
     });
   }
