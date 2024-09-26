@@ -60,6 +60,7 @@ export class UserTypeormRepository implements UserRepository {
       },
       select: {
         role: {
+          id: true,
           type: true,
         },
       },
