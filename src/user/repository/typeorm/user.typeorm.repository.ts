@@ -51,4 +51,18 @@ export class UserTypeormRepository implements UserRepository {
     const { id, name, email, role } = await this.usersRepository.save(user);
     return { id, name, email, role };
   }
+
+  async findByEmail(email: string): Promise<User | null> {
+    return this.usersRepository.findOne({
+      where: { email },
+      relations: {
+        role: true,
+      },
+      select: {
+        role: {
+          type: true,
+        },
+      },
+    });
+  }
 }

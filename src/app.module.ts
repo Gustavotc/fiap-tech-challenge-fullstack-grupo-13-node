@@ -9,6 +9,7 @@ import { User } from './user/schemas/user.schema';
 import { Role } from './user/schemas/role.schema';
 import { Post } from './post/schemas/post.schema';
 import { env } from 'src/shared/env/dotenv';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -28,8 +29,9 @@ import { env } from 'src/shared/env/dotenv';
     }),
     UserModule,
     PostModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}
