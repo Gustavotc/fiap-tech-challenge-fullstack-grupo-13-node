@@ -14,7 +14,7 @@ export class AuthService {
     }
 
     if (loginDto.password === user.password) {
-      return true;
+      return user;
     }
 
     throw new UnauthorizedException('User unauthorized');
